@@ -1,11 +1,5 @@
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import StackRoutes from "./stack.routes";
-
-interface RoutesInterface {
-    key: string; 
-    params?: undefined; 
-    merge?: boolean | undefined; 
-}
 
 export default function Routes() {
     return (
@@ -15,8 +9,7 @@ export default function Routes() {
     );
 }
 
-export function RoutesNavigation(route: RoutesInterface) {
-    const navigation = useNavigation();
-
-    navigation.navigate(route);
-}
+export type RootStackParamList = {
+    Home: undefined;
+    ItemPreview: undefined;
+};

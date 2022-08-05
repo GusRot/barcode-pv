@@ -1,29 +1,41 @@
-import {
-    View,
-    Title,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    Header,
-    Container,
-} from "./style";
+import { View, Text, TextInput, TouchableOpacity, Container } from "./style";
 import { theme } from "../../global/styles/theme";
+import Header from "../../components/Header";
 import { api } from "../../services/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../routes";
 
 export default function Home() {
-    const [pv, setPv] = useState("");
+    const [pv, setPv] = "";
+    const [itemOptions, setItemOptions] = useState([]);
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     function handleItemPV() {
-        const response = api.get(`/pv/${pv}`);
+        navigation.navigate("ItemPreview");
     }
+
+    async function loadProducts() {
+        try {
+            await api
+                .get("/products")
+                .then((response) => setItemOptions(response.data));
+            console.log(itemOptions);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    useEffect(() => {
+        // loadProducts();
+    }, []);
 
     return (
         <Container>
             <View>
-                <Header>
-                    <Title>Informe o numero do PV</Title>
-                </Header>
+                <Header title="Informe o numero do PV" />
                 <TextInput
                     placeholder="Pedido de Venda:"
                     placeholderTextColor={theme.colors.text}

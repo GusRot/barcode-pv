@@ -74,3 +74,7 @@ export const MainWrapper = styled.View`
     background-color: ${({ theme }) => theme.colors.background};
     flex: 1;
 `;
+
+export const ContainerScroll = styled.ScrollView``;
+
+export const ContainerView = styled.View``;

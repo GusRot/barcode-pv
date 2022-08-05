@@ -9,7 +9,7 @@ export const Container = styled.View`
 export const View = styled.View`
     align-items: center;
     width: 100%;
-    padding-bottom: ${({ theme }) => RFValue(theme.common.padding * 2)}px;
+    padding-bottom: ${RFPercentage(5)}px;
 `;
 
 export const Header = styled.View`
