@@ -1,24 +1,23 @@
-import Home from "./src/screens/Home";
-import AppLoading from "expo-app-loading";
+import { ThemeProvider } from "styled-components";
+import { theme } from "./src/global/styles/theme";
 import {
     useFonts,
     Roboto_400Regular,
-    Roboto_500Medium,
     Roboto_700Bold,
     Roboto_300Light,
 } from "@expo-google-fonts/roboto";
+import Routes from "./src/routes";
 
 export default function App() {
     let [fontsLoaded] = useFonts({
         Roboto_400Regular,
-        Roboto_500Medium,
         Roboto_700Bold,
         Roboto_300Light,
     });
 
-    if (!fontsLoaded) {
-        return <AppLoading />;
-    }
-
-    return <Home />;
+    return (
+        <ThemeProvider theme={theme}>
+            <Routes />
+        </ThemeProvider>
+    );
 }

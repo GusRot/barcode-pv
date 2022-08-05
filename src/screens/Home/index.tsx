@@ -1,21 +1,40 @@
-import { Text, TextInput, TouchableOpacity } from "./style";
+import {
+    View,
+    Title,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Header,
+    Container,
+} from "./style";
+import { theme } from "../../global/styles/theme";
+import { api } from "../../services/api";
+import { useState } from "react";
 
 export default function Home() {
+    const [pv, setPv] = useState("");
+
     function handleItemPV() {
-        console.log("ok");
+        const response = api.get(`/pv/${pv}`);
     }
 
     return (
-        <>
-            <Text>Informe o numero do PV</Text>
-            <TextInput
-                placeholder="Pedido de Venda:"
-                placeholderTextColor={"#333"}
-            />
+        <Container>
+            <View>
+                <Header>
+                    <Title>Informe o numero do PV</Title>
+                </Header>
+                <TextInput
+                    placeholder="Pedido de Venda:"
+                    placeholderTextColor={theme.colors.text}
+                    autoCorrect={false}
+                    onChangeText={setPv}
+                />
+            </View>
 
             <TouchableOpacity onPress={handleItemPV}>
-                <Text>confirmar</Text>
+                <Text>CONFIRMAR</Text>
             </TouchableOpacity>
-        </>
+        </Container>
     );
 }

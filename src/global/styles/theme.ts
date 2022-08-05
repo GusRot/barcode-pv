@@ -20,18 +20,17 @@ export const theme = {
         background: "#f0f2f5",
     },
     fonts: {
-        primary: 18,
-        secondary: 14,
+        primary: 20,
+        secondary: 16,
 
         icon: 24,
-        title: 30,
+        title: 26,
         dashboard: 32,
-        amount: 20,
+        amount: 22,
 
         family: {
             light: "Roboto_300Light",
             regular: "Roboto_400Regular",
-            medium: "Roboto_500Medium",
             bold: "Roboto_700Bold",
         },
     },
