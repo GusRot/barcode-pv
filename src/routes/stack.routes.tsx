@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "../screens/Home";
 import ItemPreview from "../screens/ItemPreview";
+import Barcode from "../screens/ItemPreview/Barcode";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,7 +17,9 @@ export default function StackRoutes() {
             <Stack.Screen
                 name="ItemPreview"
                 component={ItemPreview}
+                initialParams={{ inputPV: "" }}
             ></Stack.Screen>
+            <Stack.Screen name="BarCode" component={Barcode}></Stack.Screen>
         </Stack.Navigator>
     );
 }

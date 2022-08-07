@@ -2,36 +2,35 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Header from "../../components/Header";
-import { RootStackParamList } from "../../routes";
-import { ApiObject } from "../../types";
+import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList, ItemPreviewProps } from "../../routes";
+import { testObject, testArrayObject } from "../../types";
 import Card from "./Card";
 import { ContainerScroll } from "../../global/styles/theme";
 
-export default function ItemPreview() {
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const test: ApiObject = {
-        id: "1",
-        product: "PA001",
-        qtd: 300,
-        scannedQtd: 0,
-        description: "Produto 1 leve ou pesado",
-    };
+type TestObject = typeof testObject;
+interface RouteProps {
+    route: RouteProp<{ params: ItemPreviewProps }, "params">;
+}
 
-    function handleBarCode() {
-        navigation.navigate("Home");
+export default function ItemPreview({ route }: RouteProps) {
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const { inputPV } = route.params;
+
+    function handleBarCode(item: TestObject) {
+        navigation.navigate("BarCode", { itemPV: item });
     }
 
     return (
         <>
             <Header
-                title="Itens Encontrados:"
+                title={`Itens Encontrados: (${inputPV})`}
                 description="Selecione uma opção para bipar"
             />
             <ContainerScroll>
-                <Card onPress={handleBarCode} data={test} />
-                <Card onPress={handleBarCode} data={test} />
-                <Card onPress={handleBarCode} data={test} />
-                <Card onPress={handleBarCode} data={test} />
+                {testArrayObject.map((item) => (
+                    <Card onPress={() => handleBarCode(item)} data={item} />
+                ))}
             </ContainerScroll>
         </>
     );

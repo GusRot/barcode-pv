@@ -78,3 +78,7 @@ export const MainWrapper = styled.View`
 export const ContainerScroll = styled.ScrollView``;
 
 export const ContainerView = styled.View``;
+
+export const ContainerText = styled.Text``;
+
+export const ContainerButton = styled.TouchableOpacity``;

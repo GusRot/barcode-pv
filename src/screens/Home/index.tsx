@@ -7,20 +7,24 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes";
+import { ApiObject } from "../../types";
 
 export default function Home() {
-    const [pv, setPv] = "";
-    const [itemOptions, setItemOptions] = useState([]);
+    const [pv, setPv] = useState("");
+    const [itemOptions, setItemOptions] = useState<ApiObject[]>([]);
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     function handleItemPV() {
-        navigation.navigate("ItemPreview");
+        navigation.navigate("ItemPreview", {
+            itemsPV: [],
+            inputPV: pv,
+        });
     }
 
     async function loadProducts() {
         try {
             await api
-                .get("/products")
+                .get(`/products${pv}`)
                 .then((response) => setItemOptions(response.data));
             console.log(itemOptions);
         } catch (err) {
