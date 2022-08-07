@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Container } from "./style";
+import { View, Container, InputContainer } from "./style";
 import { theme } from "../../global/styles/theme";
 import Header from "../../components/Header";
 import { api } from "../../services/api";
@@ -8,6 +8,8 @@ import React from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes";
 import { ApiObject } from "../../types";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
 
 export default function Home() {
     const [pv, setPv] = useState("");
@@ -40,17 +42,17 @@ export default function Home() {
         <Container>
             <View>
                 <Header title="Informe o numero do PV" />
-                <TextInput
+<InputContainer>
+                <Input
                     placeholder="Pedido de Venda:"
                     placeholderTextColor={theme.colors.text}
                     autoCorrect={false}
                     onChangeText={setPv}
-                />
+                    />
+                    </InputContainer>
             </View>
 
-            <TouchableOpacity onPress={handleItemPV}>
-                <Text>CONFIRMAR</Text>
-            </TouchableOpacity>
+            <Button title="CONFIRMAR" onPress={handleItemPV} />
         </Container>
     );
 }

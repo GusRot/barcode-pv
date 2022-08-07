@@ -18,7 +18,7 @@ export default function ItemPreview({ route }: RouteProps) {
     const { inputPV } = route.params;
 
     function handleBarCode(item: TestObject) {
-        navigation.navigate("BarCode", { itemPV: item });
+        navigation.navigate("BarCode", { itemPV: item, inputPV });
     }
 
     return (
@@ -29,7 +29,11 @@ export default function ItemPreview({ route }: RouteProps) {
             />
             <ContainerScroll>
                 {testArrayObject.map((item) => (
-                    <Card onPress={() => handleBarCode(item)} data={item} />
+                    <Card
+                        key={item.CODIGO}
+                        onPress={() => handleBarCode(item)}
+                        data={item}
+                    />
                 ))}
             </ContainerScroll>
         </>

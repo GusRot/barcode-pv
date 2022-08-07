@@ -1,9 +1,8 @@
 export interface ApiObject {
-    id: string;
-    product: string;
-    qtd: number;
-    scannedQtd: number;
-    description: string;
+    CODIGO: string;
+    ITEM: string;
+    QTDPV: number;
+    DESCRICAO: string;
 }
 
 export interface ApiObjectScanned extends ApiObject {
@@ -11,35 +10,31 @@ export interface ApiObjectScanned extends ApiObject {
 }
 
 export const testObject: ApiObject = {
-    id: "1",
-    product: "PA001",
-    qtd: 300,
-    scannedQtd: 0,
-    description: "Produto 1 leve ou pesado",
+    CODIGO: "1",
+    ITEM: "PA001",
+    QTDPV: 300,
+    DESCRICAO: "Produto 1 leve ou pesado",
 };
 
 const testObject2: ApiObject = {
-    id: "2",
-    product: "PA002",
-    qtd: 330,
-    scannedQtd: 0,
-    description: "Produto 2 leve ou pesado",
+    CODIGO: "2",
+    ITEM: "PA002",
+    QTDPV: 330,
+    DESCRICAO: "Produto 2 leve ou pesado",
 };
 
 const testObject3: ApiObject = {
-    id: "3",
-    product: "PA003",
-    qtd: 340,
-    scannedQtd: 0,
-    description: "Produto 3 leve ou pesado",
+    CODIGO: "3",
+    ITEM: "PA003",
+    QTDPV: 340,
+    DESCRICAO: "Produto 3 leve ou pesado",
 };
 
 const testObject4: ApiObject = {
-    id: "4",
-    product: "PA004",
-    qtd: 440,
-    scannedQtd: 0,
-    description: "Produto 4 leve ou pesado",
+    CODIGO: "4",
+    ITEM: "PA004",
+    QTDPV: 440,
+    DESCRICAO: "Produto 4 leve ou pesado",
 };
 
 export const testArrayObject: ApiObject[] = [testObject, testObject2, testObject3, testObject4]

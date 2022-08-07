@@ -10,12 +10,11 @@ export default function Card({ data, ...rest }: CardProps) {
     return (
         <Container {...rest}>
             <Border>
-                <TextTitle> Item: {data.id} </TextTitle>
+                <TextTitle> Item: {data.CODIGO} </TextTitle>
             </Border>
-            <Text> Produto: {data.product} </Text>
-            <Text> Quantidade: {data.qtd} </Text>
-            <Text> Quantidade Lida: {data.scannedQtd} </Text>
-            <TextDescription> Descrição: {data.description} </TextDescription>
+            <Text> Produto: {data.ITEM} </Text>
+            <Text> Quantidade: {data.QTDPV} </Text>
+            <TextDescription> Descrição: {data.DESCRICAO} </TextDescription>
         </Container>
     );
 }

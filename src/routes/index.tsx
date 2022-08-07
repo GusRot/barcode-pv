@@ -1,5 +1,4 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { Dispatch, SetStateAction } from "react";
 import { ApiObject, ApiObjectScanned } from "../types";
 import StackRoutes from "./stack.routes";
 
@@ -22,6 +21,7 @@ export interface HomeProps {
 
 export interface BarCodeProps {
     itemPV: ApiObject;
+    inputPV: string;
 }
 
 export type RootStackParamList = {
