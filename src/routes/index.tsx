@@ -11,7 +11,7 @@ export default function Routes() {
 }
 
 export interface ItemPreviewProps {
-    itemsPV: Array<string | null>;
+    itemsPV: ApiObject[];
     inputPV: string;
 }
 

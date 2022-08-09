@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "../screens/Home";
 import ItemPreview from "../screens/ItemPreview";
-import Barcode from "../screens/ItemPreview/Barcode";
+import Barcode from "../screens/Barcode";
 
 const Stack = createNativeStackNavigator();
 

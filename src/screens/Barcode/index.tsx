@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { ContainerText, ContainerView, theme } from "../../global/styles/theme";
+import { ContainerText, ContainerView } from "../../global/styles/theme";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { BarCodeProps, RootStackParamList } from "../../routes";
-import {
-    BarCodeContainer,
-    QtdContainer,
-    QtdContainerDivider,
-    SubmitContainer,
-} from "./styles";
+import { BarCodeContainer, SubmitContainer } from "./styles";
 import Button from "../../components/Button";
-import Input from "../../components/Input";
 import Header from "../../components/Header";
 import { api } from "../../services/api";
 import SuccessScam from "./SuccessScam";
@@ -34,6 +28,7 @@ export default function Barcode({ route }: RouteProps) {
     const [inputQtd, setInputQtd] = useState<number>();
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const { itemPV, inputPV } = route.params;
+    const [openCodeReader,setOpenCodeReader] = useState(false);
 
     function handleBarCode() {
         setScanned(false);
@@ -76,10 +71,15 @@ export default function Barcode({ route }: RouteProps) {
         getBarCodeScannerPermissions();
     }, []);
 
+    useEffect(() => {
+        setOpenCodeReader(!scanned && hasPermission ? hasPermission: false)
+    },[scanned,hasPermission])
+
     const handleBarCodeScanned = ({ type, data }: CodeScanned) => {
         setScanned(true);
+        setQtdRead(Number(inputQtd) + 3);
         alert(
-            `Bar code with type ${type} and data ${data} has been scanned! item:${itemPV}`
+            `Bar code with type ${type} and data ${data} has been scanned!`
         );
     };
 
@@ -96,7 +96,7 @@ export default function Barcode({ route }: RouteProps) {
                 title={`QTD Lida: ${qtdRead}`}
                 description="Escaneie o QR Code ou digite a quantidade"
             />
-            {!scanned && (
+            {openCodeReader && (
                 <>
                     <BarCodeContainer>
                         <BarCodeScanner

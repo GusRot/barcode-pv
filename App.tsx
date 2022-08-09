@@ -4,9 +4,9 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import {
     useFonts,
+    Roboto_300Light,
     Roboto_400Regular,
     Roboto_700Bold,
-    Roboto_300Light,
 } from "@expo-google-fonts/roboto";
 
 import { ThemeProvider } from "styled-components";
@@ -19,9 +19,9 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
     const [appIsReady, setAppIsReady] = useState(false);
     let [fontsLoaded] = useFonts({
+        Roboto_300Light,
         Roboto_400Regular,
         Roboto_700Bold,
-        Roboto_300Light,
     });
 
     useEffect(() => {

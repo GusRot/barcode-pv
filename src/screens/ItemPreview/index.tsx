@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import Header from "../../components/Header";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList, ItemPreviewProps } from "../../routes";
-import { testObject, testArrayObject } from "../../types";
+import { testObject } from "../../types";
 import Card from "./Card";
 import { ContainerScroll } from "../../global/styles/theme";
 
@@ -15,7 +15,7 @@ interface RouteProps {
 
 export default function ItemPreview({ route }: RouteProps) {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const { inputPV } = route.params;
+    const { inputPV, itemsPV } = route.params;
 
     function handleBarCode(item: TestObject) {
         navigation.navigate("BarCode", { itemPV: item, inputPV });
@@ -24,11 +24,11 @@ export default function ItemPreview({ route }: RouteProps) {
     return (
         <>
             <Header
-                title={`Itens Encontrados: (${inputPV})`}
-                description="Selecione uma opção para bipar"
+                title={`Item: (${inputPV})`}
+                description="Selecione um produto"
             />
             <ContainerScroll>
-                {testArrayObject.map((item) => (
+                {itemsPV.map((item) => (
                     <Card
                         key={item.CODIGO}
                         onPress={() => handleBarCode(item)}

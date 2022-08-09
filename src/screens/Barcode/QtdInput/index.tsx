@@ -18,7 +18,7 @@ export default function QtdInput({
         <QtdContainer>
             <QtdContainerDivider>
                 <Input
-                    placeholder="Quantidade:"
+                    placeholder="Qtd:"
                     keyboardType="numeric"
                     placeholderTextColor={theme.colors.text}
                     autoCorrect={false}
@@ -27,7 +27,7 @@ export default function QtdInput({
                 />
             </QtdContainerDivider>
             <QtdContainerDivider>
-                <Button title={"Adicionar"} onPress={handleQtdUpdate} />
+                <Button title={"Somar"} onPress={handleQtdUpdate} />
             </QtdContainerDivider>
         </QtdContainer>
     );
