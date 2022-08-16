@@ -16,6 +16,7 @@ interface RouteProps {
 export default function ItemPreview({ route }: RouteProps) {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const { inputPV, itemsPV } = route.params;
+    console.log(itemsPV);
 
     function handleBarCode(item: TestObject) {
         navigation.navigate("BarCode", { itemPV: item, inputPV });

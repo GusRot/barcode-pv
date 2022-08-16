@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "exp://192.168.0.8:19000",
+    baseURL: "http://ara137580.protheus.cloudtotvs.com.br:8400/rest/api",
 });
 
 export { api };
