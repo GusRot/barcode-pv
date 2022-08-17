@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
@@ -12,7 +12,7 @@ import {
 import { ThemeProvider } from "styled-components";
 import { theme } from "./src/global/styles/theme";
 import Routes from "./src/routes";
-import { View } from "./src/screens/Home/style";
+import Splash from "./src/components/Splash";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,12 +40,6 @@ export default function App() {
         prepare();
     }, [fontsLoaded]);
 
-    const onLayoutRootView = useCallback(async () => {
-        if (!appIsReady) {
-            await SplashScreen.hideAsync();
-        }
-    }, [appIsReady]);
-
     if (appIsReady) {
         return (
             <ThemeProvider theme={theme}>
@@ -54,16 +48,5 @@ export default function App() {
         );
     }
 
-    return (
-        <View
-            onLayout={onLayoutRootView}
-            style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <Entypo name="rocket" size={70} />
-        </View>
-    );
+    return <Splash appIsReady={appIsReady} />;
 }

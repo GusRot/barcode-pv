@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -11,8 +11,10 @@ import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { View, Container, InputContainer } from "./style";
 import { Alert } from "react-native";
+import Splash from "../../components/Splash";
 
 export default function Home() {
+    const [appIsReady, setAppIsReady] = useState(true);
     const [pv, setPv] = useState("");
     const [responsePv, setResponsePv] = useState("");
     const [itemOptions, setItemOptions] = useState<ApiObject[]>([]);
@@ -22,10 +24,12 @@ export default function Home() {
     const { REACT_APP_USERNAME } = process.env;
 
     async function handleItemPV() {
+        setAppIsReady(false);
         const valuePV = pv;
         setPv("");
         await checkAuth();
         await loadProducts(valuePV);
+        setAppIsReady(true);
     }
 
     useEffect(() => {
@@ -97,22 +101,25 @@ export default function Home() {
         }
     }
 
-    return (
-        <Container>
-            <View>
-                <Header title="Informe o numero do PV" />
-                <InputContainer>
-                    <Input
-                        placeholder="Pedido de Venda:"
-                        placeholderTextColor={theme.colors.text}
-                        autoCorrect={false}
-                        onChangeText={setPv}
-                        value={pv}
-                    />
-                </InputContainer>
-            </View>
+    if (appIsReady)
+        return (
+            <Container>
+                <View>
+                    <Header title="Informe o numero do PV" />
+                    <InputContainer>
+                        <Input
+                            placeholder="Pedido de Venda:"
+                            placeholderTextColor={theme.colors.text}
+                            autoCorrect={false}
+                            onChangeText={setPv}
+                            value={pv}
+                        />
+                    </InputContainer>
+                </View>
 
-            <Button title="CONFIRMAR" onPress={handleItemPV} />
-        </Container>
-    );
+                <Button title="CONFIRMAR" onPress={handleItemPV} />
+            </Container>
+        );
+
+    return <Splash appIsReady={appIsReady} />;
 }
