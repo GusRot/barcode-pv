@@ -7,3 +7,8 @@ export const BarCodeContainer = styled.View`
     flex: 1;
     margin: ${({ theme }) => RFValue(theme.common.padding)}px 0;
 `;
+
+export const BarCodeEnableContainer = styled.View`
+    flex: 1;
+    justify-content: flex-start;
+`;

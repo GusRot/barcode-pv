@@ -14,7 +14,6 @@ interface RouteProps {
 export default function ItemPreview({ route }: RouteProps) {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const { inputPV, itemsPV } = route.params;
-    console.log(itemsPV);
 
     function handleBarCode(item: ApiObject) {
         navigation.navigate("BarCode", { itemPV: item, inputPV });
@@ -23,8 +22,8 @@ export default function ItemPreview({ route }: RouteProps) {
     return (
         <>
             <Header
-                title={`Item: (${inputPV})`}
-                description="Selecione um produto"
+                title={`PV: (${inputPV})`}
+                description="Selecione um Item"
             />
             <ContainerScroll>
                 {itemsPV.map((item) => (

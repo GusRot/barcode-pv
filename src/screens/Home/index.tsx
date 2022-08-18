@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -10,8 +10,15 @@ import Header from "../../components/Header";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { View, Container, InputContainer } from "./style";
-import { Alert } from "react-native";
+import { Alert, Keyboard, TouchableWithoutFeedback } from "react-native";
 import Splash from "../../components/Splash";
+
+interface AuthToken {
+    token: string;
+    time: number;
+    refresh: string;
+    data: Date;
+}
 
 export default function Home() {
     const [appIsReady, setAppIsReady] = useState(true);
@@ -42,14 +49,18 @@ export default function Home() {
     }, [itemOptions, responsePv]);
 
     async function loadProducts(item: string) {
-        const { token } = await checkAuth();
+        const token = await checkAuth();
         try {
             const config = {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { Authorization: `Bearer ${token?.token}` },
+            };
+
+            const body = {
+                Pedido: item,
             };
 
             await api
-                .post(`/retail/v1/AWSITPV`, { Pedido: item }, config)
+                .post(`/retail/v1/AWSITPV`, body, config)
                 .then((response) => {
                     setItemOptions(response.data.Ret[0].itens);
                     setResponsePv(response.data.Ret[0].pedido);
@@ -63,14 +74,25 @@ export default function Home() {
 
     async function checkAuth() {
         const response = await AsyncStorage.getItem(storageAuthKey);
-        const authToken = response ? JSON.parse(response) : false;
+        const authToken = response
+            ? (JSON.parse(response) as AuthToken)
+            : false;
 
         if (authToken) {
+            const localDate = new Date().getTime();
+            const authDate = new Date(authToken.data).getTime();
+
+            if (localDate - authDate < authToken.time) {
+                const newToken = await authentication();
+                return newToken;
+            }
+
             return authToken;
         }
 
         if (!authToken) {
             const token = await authentication();
+
             return token;
         }
     }
@@ -82,7 +104,7 @@ export default function Home() {
                     `/oauth2/v1/token?grant_type=password&password=${REACT_APP_PASSWORD}&username=${REACT_APP_USERNAME}`
                 )
                 .then((response) => {
-                    const tokenCreate = {
+                    const tokenCreate: AuthToken = {
                         token: response.data.access_token,
                         time: response.data.expires_in,
                         refresh: response.data.refresh_token,
@@ -98,27 +120,32 @@ export default function Home() {
                 });
         } catch (error) {
             console.error("authentication", error);
+            setItemOptions([]);
+            Alert.alert("Autenticação falhou");
         }
     }
 
     if (appIsReady)
         return (
-            <Container>
-                <View>
-                    <Header title="Informe o numero do PV" />
-                    <InputContainer>
-                        <Input
-                            placeholder="Pedido de Venda:"
-                            placeholderTextColor={theme.colors.text}
-                            autoCorrect={false}
-                            onChangeText={setPv}
-                            value={pv}
-                        />
-                    </InputContainer>
-                </View>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <Container>
+                    <View>
+                        <Header title="Informe o numero do PV" />
+                        <InputContainer>
+                            <Input
+                                placeholder="Pedido de Venda:"
+                                placeholderTextColor={theme.colors.text}
+                                autoCorrect={false}
+                                onChangeText={setPv}
+                                autoCapitalize="none"
+                                value={pv}
+                            />
+                        </InputContainer>
+                    </View>
 
-                <Button title="CONFIRMAR" onPress={handleItemPV} />
-            </Container>
+                    <Button title="CONFIRMAR" onPress={handleItemPV} />
+                </Container>
+            </TouchableWithoutFeedback>
         );
 
     return <Splash appIsReady={appIsReady} />;

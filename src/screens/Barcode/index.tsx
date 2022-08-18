@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet } from "react-native";
+import {
+    Alert,
+    Keyboard,
+    StyleSheet,
+    TouchableWithoutFeedback,
+} from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { ContainerText, ContainerView } from "../../global/styles/theme";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { BarCodeProps, RootStackParamList } from "../../routes";
-import { BarCodeContainer, SubmitContainer } from "./styles";
+import {
+    BarCodeContainer,
+    BarCodeEnableContainer,
+    SubmitContainer,
+} from "./styles";
 import Button from "../../components/Button";
 import Header from "../../components/Header";
 import { api } from "../../services/api";
@@ -28,7 +37,8 @@ export default function Barcode({ route }: RouteProps) {
     const [inputQtd, setInputQtd] = useState<number>();
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const { itemPV, inputPV } = route.params;
-    const [openCodeReader,setOpenCodeReader] = useState(false);
+    const [openCodeReader, setOpenCodeReader] = useState(false);
+    const [userHandleCam, setUserHandleCam] = useState(false);
 
     function handleBarCode() {
         setScanned(false);
@@ -36,8 +46,20 @@ export default function Barcode({ route }: RouteProps) {
 
     function handleQtdUpdate() {
         if (inputQtd) {
-            setQtdRead(Number(inputQtd) + Number(qtdRead));
+            const inputQtdFormatted = String(inputQtd)
+                .replace(",", ".")
+                .replace(/[^0-9.]/g, "");
+
+            if (!inputQtdFormatted) {
+                Alert.alert("Quantidade invalida");
+                setInputQtd(undefined);
+                return;
+            }
+
+            const newQtdRead = parseFloat(inputQtdFormatted) + Number(qtdRead);
+            setQtdRead(newQtdRead);
             setInputQtd(undefined);
+            Alert.alert("Quantidade adicionada");
         }
     }
 
@@ -62,6 +84,10 @@ export default function Barcode({ route }: RouteProps) {
         navigation.navigate("Home", { payload: undefined });
     }
 
+    function handleBarCodeEnable() {
+        setUserHandleCam(true);
+    }
+
     useEffect(() => {
         const getBarCodeScannerPermissions = async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -72,52 +98,65 @@ export default function Barcode({ route }: RouteProps) {
     }, []);
 
     useEffect(() => {
-        setOpenCodeReader(!scanned && hasPermission ? hasPermission: false)
-    },[scanned,hasPermission])
+        setOpenCodeReader(
+            !scanned && hasPermission && userHandleCam ? hasPermission : false
+        );
+    }, [scanned, hasPermission, userHandleCam]);
 
     const handleBarCodeScanned = ({ type, data }: CodeScanned) => {
         setScanned(true);
         setQtdRead(Number(inputQtd) + 3);
-        alert(
-            `Bar code with type ${type} and data ${data} has been scanned!`
-        );
+        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     };
 
-    if (hasPermission === null) {
+    if (hasPermission === null && userHandleCam) {
         return <ContainerText>Requesting for camera permission</ContainerText>;
     }
-    if (hasPermission === false) {
+    if (hasPermission === false && userHandleCam) {
         return <ContainerText>No access to camera</ContainerText>;
     }
 
     return (
-        <ContainerView style={styles.container}>
-            <Header
-                title={`QTD Lida: ${qtdRead}`}
-                description="Escaneie o QR Code ou digite a quantidade"
-            />
-            {openCodeReader && (
-                <>
-                    <BarCodeContainer>
-                        <BarCodeScanner
-                            onBarCodeScanned={
-                                scanned ? undefined : handleBarCodeScanned
-                            }
-                            style={StyleSheet.absoluteFillObject}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <ContainerView style={styles.container}>
+                <Header
+                    title={`QTD Lida: ${String(qtdRead).replace(".", ",")} kg`}
+                    description={`Escaneie o QR Code ou digite a quantidade (produto: ${itemPV.ITEM})`}
+                />
+                {!userHandleCam && !scanned && (
+                    <BarCodeEnableContainer>
+                        <Button
+                            title={"Habilitar leitura"}
+                            onPress={handleBarCodeEnable}
                         />
-                    </BarCodeContainer>
+                    </BarCodeEnableContainer>
+                )}
+                {openCodeReader && (
+                    <>
+                        <BarCodeContainer>
+                            <BarCodeScanner
+                                onBarCodeScanned={
+                                    scanned ? undefined : handleBarCodeScanned
+                                }
+                                style={StyleSheet.absoluteFillObject}
+                            />
+                        </BarCodeContainer>
+                    </>
+                )}
+                {scanned ? (
+                    <SuccessScam handleBarCode={handleBarCode} />
+                ) : (
                     <QtdInput
                         handleQtdUpdate={handleQtdUpdate}
                         setInputQtd={setInputQtd}
                         inputQtd={inputQtd}
                     />
-                </>
-            )}
-            {scanned && <SuccessScam handleBarCode={handleBarCode} />}
-            <SubmitContainer>
-                <Button title={"Enviar"} onPress={handleBarCodeSubmit} />
-            </SubmitContainer>
-        </ContainerView>
+                )}
+                <SubmitContainer>
+                    <Button title={"Enviar"} onPress={handleBarCodeSubmit} />
+                </SubmitContainer>
+            </ContainerView>
+        </TouchableWithoutFeedback>
     );
 }
 
