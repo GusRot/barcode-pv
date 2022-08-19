@@ -89,12 +89,12 @@ export default function Barcode({ route }: RouteProps) {
         setUserHandleCam(true);
     }
 
-    useEffect(() => {
-        const getBarCodeScannerPermissions = async () => {
-            const { status } = await BarCodeScanner.requestPermissionsAsync();
-            setHasPermission(status === "granted");
-        };
+    const getBarCodeScannerPermissions = async () => {
+        const { status } = await BarCodeScanner.requestPermissionsAsync();
+        setHasPermission(status === "granted");
+    };
 
+    useEffect(() => {
         getBarCodeScannerPermissions();
     }, []);
 
@@ -111,10 +111,20 @@ export default function Barcode({ route }: RouteProps) {
     };
 
     if (hasPermission === null && userHandleCam) {
-        return <ErrorScreen title="Requesting for camera permission" />;
+        return (
+            <ErrorScreen
+                enablePermission={getBarCodeScannerPermissions}
+                title="Requesting for camera permission"
+            />
+        );
     }
     if (hasPermission === false && userHandleCam) {
-        return <ErrorScreen title="No access to camera" />;
+        return (
+            <ErrorScreen
+                enablePermission={getBarCodeScannerPermissions}
+                title="No access to camera"
+            />
+        );
     }
 
     return (
