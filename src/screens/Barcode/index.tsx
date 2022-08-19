@@ -6,7 +6,7 @@ import {
     TouchableWithoutFeedback,
 } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { ContainerText, ContainerView } from "../../global/styles/theme";
+import { ContainerView } from "../../global/styles/theme";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { BarCodeProps, RootStackParamList } from "../../routes";
@@ -20,6 +20,7 @@ import Header from "../../components/Header";
 import { api } from "../../services/api";
 import SuccessScam from "./SuccessScam";
 import QtdInput from "./QtdInput";
+import ErrorScreen from "../../components/ErrorScreen";
 
 interface CodeScanned {
     type: string;
@@ -110,10 +111,10 @@ export default function Barcode({ route }: RouteProps) {
     };
 
     if (hasPermission === null && userHandleCam) {
-        return <ContainerText>Requesting for camera permission</ContainerText>;
+        return <ErrorScreen title="Requesting for camera permission" />;
     }
     if (hasPermission === false && userHandleCam) {
-        return <ContainerText>No access to camera</ContainerText>;
+        return <ErrorScreen title="No access to camera" />;
     }
 
     return (

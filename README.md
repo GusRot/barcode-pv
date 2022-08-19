@@ -18,6 +18,9 @@
 
 - `react-navigation-native-stack` `styled-components` `async-storage` `expo-splash-screen`
 
+## Build
+You can download the apk available at (https://expo.dev/accounts/gusrot/projects/barcodepv)
+
 Você pode rodar na sua máquina, em seu emulador:
 
 ## Getting Started with
