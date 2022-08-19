@@ -40,6 +40,7 @@ export default function Barcode({ route }: RouteProps) {
     const { itemPV, inputPV } = route.params;
     const [openCodeReader, setOpenCodeReader] = useState(false);
     const [userHandleCam, setUserHandleCam] = useState(false);
+    const [userHandleInput, setUserHandleInput] = useState(false);
 
     function handleBarCode() {
         setScanned(false);
@@ -89,6 +90,10 @@ export default function Barcode({ route }: RouteProps) {
         setUserHandleCam(true);
     }
 
+    function handleInputEnable() {
+        setUserHandleInput(true);
+    }
+
     const getBarCodeScannerPermissions = async () => {
         const { status } = await BarCodeScanner.requestPermissionsAsync();
         setHasPermission(status === "granted");
@@ -114,7 +119,7 @@ export default function Barcode({ route }: RouteProps) {
         return (
             <ErrorScreen
                 enablePermission={getBarCodeScannerPermissions}
-                title="Requesting for camera permission"
+                title="Permissão da camera pendente"
             />
         );
     }
@@ -122,7 +127,7 @@ export default function Barcode({ route }: RouteProps) {
         return (
             <ErrorScreen
                 enablePermission={getBarCodeScannerPermissions}
-                title="No access to camera"
+                title="Sem acesso a camera"
             />
         );
     }
@@ -138,6 +143,7 @@ export default function Barcode({ route }: RouteProps) {
                     <BarCodeEnableContainer>
                         <Button
                             title={"Habilitar leitura"}
+                            primary={false}
                             onPress={handleBarCodeEnable}
                         />
                     </BarCodeEnableContainer>
@@ -156,11 +162,17 @@ export default function Barcode({ route }: RouteProps) {
                 )}
                 {scanned ? (
                     <SuccessScam handleBarCode={handleBarCode} />
-                ) : (
+                ) : userHandleInput ? (
                     <QtdInput
                         handleQtdUpdate={handleQtdUpdate}
                         setInputQtd={setInputQtd}
                         inputQtd={inputQtd}
+                    />
+                ) : (
+                    <Button
+                        title={"Habilitar Input QTD"}
+                        primary={false}
+                        onPress={handleInputEnable}
                     />
                 )}
                 <SubmitContainer>

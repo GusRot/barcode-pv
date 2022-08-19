@@ -27,6 +27,10 @@
       },
       "package": "bar.code.PV"
     },
+    "androidStatusBar": {
+      "backgroundColor": "#FBBB57",
+      "translucent": false
+    },
     "web": {
       "favicon": "./assets/favicon.png"
     }

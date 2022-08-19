@@ -6,7 +6,7 @@ export const Container = styled.View`
     align-items: center;
     justify-content: flex-end;
     padding-bottom: ${RFPercentage(5)}px;
-    height: ${RFPercentage(25)}px;
+    height: ${RFPercentage(20)}px;
     background-color: ${({ theme }) => theme.colors.secondary};
 `;
 

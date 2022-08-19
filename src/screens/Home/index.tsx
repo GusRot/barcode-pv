@@ -31,9 +31,9 @@ export default function Home() {
     const { REACT_APP_USERNAME } = process.env;
 
     async function handleItemPV() {
-        if(!pv) {
-            Alert.alert('Digite um valor válido')
-            return
+        if (!pv) {
+            Alert.alert("Digite um valor válido");
+            return;
         }
         setAppIsReady(false);
         const valuePV = pv;
