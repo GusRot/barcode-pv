@@ -29,7 +29,7 @@ export default function QtdInput({
             <QtdContainerDivider>
                 <Button
                     primary={false}
-                    title={"Somar"}
+                    title={"Enviar"}
                     onPress={handleQtdUpdate}
                 />
             </QtdContainerDivider>

@@ -60,6 +60,7 @@ export default function Home() {
             };
 
             const body = {
+                id: "ITENS",
                 Pedido: item,
             };
 

@@ -21,10 +21,19 @@ import { api } from "../../services/api";
 import SuccessScam from "./SuccessScam";
 import QtdInput from "./QtdInput";
 import ErrorScreen from "../../components/ErrorScreen";
+import Splash from "../../components/Splash";
 
 interface CodeScanned {
     type: string;
     data: string;
+}
+
+interface SubmitScan {
+    id: string;
+    Pedido: string;
+    Item: string;
+    Produto: string;
+    Peso: number;
 }
 
 interface RouteProps {
@@ -32,21 +41,30 @@ interface RouteProps {
 }
 
 export default function Barcode({ route }: RouteProps) {
-    const [hasPermission, setHasPermission] = useState<boolean>();
-    const [scanned, setScanned] = useState(false);
-    const [qtdRead, setQtdRead] = useState(0);
-    const [inputQtd, setInputQtd] = useState<number>();
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const { itemPV, inputPV } = route.params;
+    const [hasPermission, setHasPermission] = useState<boolean>();
+    const [appIsReady, setAppIsReady] = useState(true);
+    const [scanned, setScanned] = useState(false);
     const [openCodeReader, setOpenCodeReader] = useState(false);
     const [userHandleCam, setUserHandleCam] = useState(false);
     const [userHandleInput, setUserHandleInput] = useState(false);
+    const [qtdRead, setQtdRead] = useState(0);
+    const [inputQtd, setInputQtd] = useState<number>();
 
     function handleBarCode() {
         setScanned(false);
     }
 
-    function handleQtdUpdate() {
+    const handleBarCodeScanned = ({ type, data }: CodeScanned) => {
+        setScanned(true);
+        setInputQtd(undefined);
+        setQtdRead(Number(data));
+        alert(`Quantidade ${data} foi lida!`);
+        handleQtdUpdate();
+    };
+
+    async function handleQtdUpdate() {
         if (inputQtd) {
             const inputQtdFormatted = String(inputQtd)
                 .replace(",", ".")
@@ -58,32 +76,39 @@ export default function Barcode({ route }: RouteProps) {
                 return;
             }
 
+            await barCodeSubmit(Number(inputQtdFormatted));
             const newQtdRead = parseFloat(inputQtdFormatted) + Number(qtdRead);
             setQtdRead(newQtdRead);
             setInputQtd(undefined);
             Alert.alert("Quantidade adicionada");
+            return;
         }
+        await barCodeSubmit(qtdRead);
     }
 
-    function handleBarCodeSubmit() {
-        setScanned(false);
+    function barCodeSubmit(qtdRead: number) {
         const submitObject = {
+            id: "COLETA",
             Pedido: inputPV,
             Item: itemPV.ITEM,
-            CODIGO: itemPV.CODIGO,
-            QTDLida: qtdRead,
+            Produto: itemPV.CODIGO,
+            Peso: qtdRead,
         };
 
-        console.log(submitObject);
-        async function sendProducts() {
-            try {
-                await api.post(`/products`, submitObject);
-            } catch (err) {
-                console.error(err);
-            }
-        }
+        sendProducts(submitObject);
+    }
 
-        navigation.navigate("Home", { payload: undefined });
+    async function sendProducts(submitObject: SubmitScan) {
+        setAppIsReady(false);
+        try {
+            await api.post(`/retail/v1/AWSITPV`, submitObject);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            console.log("send", submitObject);
+
+            setAppIsReady(true);
+        }
     }
 
     function handleBarCodeEnable() {
@@ -92,6 +117,10 @@ export default function Barcode({ route }: RouteProps) {
 
     function handleInputEnable() {
         setUserHandleInput(true);
+    }
+
+    function handleFinishPV() {
+        navigation.navigate("Home", { payload: undefined });
     }
 
     const getBarCodeScannerPermissions = async () => {
@@ -109,12 +138,6 @@ export default function Barcode({ route }: RouteProps) {
         );
     }, [scanned, hasPermission, userHandleCam]);
 
-    const handleBarCodeScanned = ({ type, data }: CodeScanned) => {
-        setScanned(true);
-        setQtdRead(Number(inputQtd) + 3);
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    };
-
     if (hasPermission === null && userHandleCam) {
         return (
             <ErrorScreen
@@ -130,6 +153,10 @@ export default function Barcode({ route }: RouteProps) {
                 title="Sem acesso a camera"
             />
         );
+    }
+
+    if (!appIsReady) {
+        return <Splash appIsReady={appIsReady} />;
     }
 
     return (
@@ -176,7 +203,7 @@ export default function Barcode({ route }: RouteProps) {
                     />
                 )}
                 <SubmitContainer>
-                    <Button title={"Enviar"} onPress={handleBarCodeSubmit} />
+                    <Button title={"Finalizar"} onPress={handleFinishPV} />
                 </SubmitContainer>
             </ContainerView>
         </TouchableWithoutFeedback>
