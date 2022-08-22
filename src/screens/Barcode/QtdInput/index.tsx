@@ -2,10 +2,11 @@ import { theme } from "../../../global/styles/theme";
 import { QtdContainerDivider, QtdContainer } from "./style";
 import Button from "../../../components/Button";
 import Input from "../../../components/Input";
+import { useState } from "react";
 
 interface QtdInputProps {
-    inputQtd: number | undefined;
-    setInputQtd: React.Dispatch<React.SetStateAction<number | undefined>>;
+    inputQtd: string;
+    setInputQtd: React.Dispatch<React.SetStateAction<string>>;
     handleQtdUpdate: () => void;
 }
 
@@ -14,6 +15,26 @@ export default function QtdInput({
     setInputQtd,
     handleQtdUpdate,
 }: QtdInputProps) {
+    const [onfocus, setOnFocus] = useState(false);
+    const [filled, setFilled] = useState(false);
+
+    function handleIsfocused() {
+        setOnFocus(true);
+    }
+
+    function handleOnBlur() {
+        setOnFocus(false);
+        setFilled(!!inputQtd);
+    }
+
+    function handleInputChange(value: string) {
+        const inputQtdFormatted = value
+            .replace(".", ",")
+            .replace(/[^0-9,]/g, "")
+            .replace(/[,]{2,}/g, ",");
+        setInputQtd(inputQtdFormatted);
+    }
+
     return (
         <QtdContainer>
             <QtdContainerDivider>
@@ -23,7 +44,11 @@ export default function QtdInput({
                     placeholderTextColor={theme.colors.text}
                     autoCorrect={false}
                     value={inputQtd}
-                    onChangeText={setInputQtd}
+                    onBlur={handleOnBlur}
+                    onFocus={handleIsfocused}
+                    focus={onfocus}
+                    filled={filled}
+                    onChangeText={(value) => handleInputChange(value)}
                 />
             </QtdContainerDivider>
             <QtdContainerDivider>
@@ -31,6 +56,7 @@ export default function QtdInput({
                     primary={false}
                     title={"Enviar"}
                     onPress={handleQtdUpdate}
+                    enabled={!!inputQtd.replace(",", "")}
                 />
             </QtdContainerDivider>
         </QtdContainer>

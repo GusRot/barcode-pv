@@ -1,12 +1,16 @@
 import styled from "styled-components/native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
-export const Container = styled.View`
+interface ContainerProps {
+    fixed: boolean;
+}
+export const Container = styled.View<ContainerProps>`
     width: 100%;
     align-items: center;
     justify-content: flex-end;
+    padding: ${({ theme }) => RFValue(theme.common.padding)}px;
     padding-bottom: ${RFPercentage(5)}px;
-    height: ${RFPercentage(20)}px;
+    height: ${({ fixed }) => (fixed ? `${RFPercentage(20)}px` : "auto")};
     background-color: ${({ theme }) => theme.colors.secondary};
 `;
 

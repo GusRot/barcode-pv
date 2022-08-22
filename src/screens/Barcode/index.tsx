@@ -50,7 +50,7 @@ export default function Barcode({ route }: RouteProps) {
     const [userHandleCam, setUserHandleCam] = useState(false);
     const [userHandleInput, setUserHandleInput] = useState(false);
     const [qtdRead, setQtdRead] = useState(0);
-    const [inputQtd, setInputQtd] = useState<number>();
+    const [inputQtd, setInputQtd] = useState("");
 
     function handleBarCode() {
         setScanned(false);
@@ -58,29 +58,26 @@ export default function Barcode({ route }: RouteProps) {
 
     const handleBarCodeScanned = ({ type, data }: CodeScanned) => {
         setScanned(true);
-        setInputQtd(undefined);
-        setQtdRead(Number(data));
+        setInputQtd("");
+        setQtdRead(Number(data) + qtdRead);
         alert(`Quantidade ${data} foi lida!`);
         handleQtdUpdate();
     };
 
     async function handleQtdUpdate() {
         if (inputQtd) {
-            const inputQtdFormatted = String(inputQtd)
-                .replace(",", ".")
-                .replace(/[^0-9.]/g, "");
+            const inputQtdFormatted = inputQtd.replace(",", ".");
 
             if (!inputQtdFormatted) {
                 Alert.alert("Quantidade invalida");
-                setInputQtd(undefined);
+                setInputQtd("");
                 return;
             }
 
-            await barCodeSubmit(Number(inputQtdFormatted));
             const newQtdRead = parseFloat(inputQtdFormatted) + Number(qtdRead);
             setQtdRead(newQtdRead);
-            setInputQtd(undefined);
-            Alert.alert("Quantidade adicionada");
+            setInputQtd("");
+            await barCodeSubmit(Number(inputQtdFormatted));
             return;
         }
         await barCodeSubmit(qtdRead);
@@ -102,6 +99,7 @@ export default function Barcode({ route }: RouteProps) {
         setAppIsReady(false);
         try {
             await api.post(`/retail/v1/AWSITPV`, submitObject);
+            Alert.alert("Quantidade adicionada");
         } catch (err) {
             console.error(err);
         } finally {
@@ -164,7 +162,10 @@ export default function Barcode({ route }: RouteProps) {
             <ContainerView style={styles.container}>
                 <Header
                     title={`QTD Lida: ${String(qtdRead).replace(".", ",")} kg`}
-                    description={`Escaneie o QR Code ou digite a quantidade (produto: ${itemPV.ITEM})`}
+                    description={`${"\n"}(produto: ${
+                        itemPV.CODIGO
+                    })${"\n"}(Pedido: ${inputPV})${"\n"}(Item: ${itemPV.ITEM})`}
+                    fixed={false}
                 />
                 {!userHandleCam && !scanned && (
                     <BarCodeEnableContainer>
@@ -203,7 +204,11 @@ export default function Barcode({ route }: RouteProps) {
                     />
                 )}
                 <SubmitContainer>
-                    <Button title={"Finalizar"} onPress={handleFinishPV} />
+                    <Button
+                        title={"Finalizar"}
+                        onPress={handleFinishPV}
+                        enabled={!!qtdRead}
+                    />
                 </SubmitContainer>
             </ContainerView>
         </TouchableWithoutFeedback>

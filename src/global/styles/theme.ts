@@ -4,6 +4,7 @@ import styled, { css } from "styled-components/native";
 export const theme = {
     colors: {
         primary: "#13274A",
+        primary_light: "rgba(19,39,74,0.35)",
         secondary: "#FBBB57",
         secondary_light: "rgba(251,187,87,0.5)",
 
@@ -20,11 +21,11 @@ export const theme = {
         background: "#f0f2f5",
     },
     fonts: {
-        primary: 20,
+        primary: 19,
         secondary: 16,
 
         icon: 24,
-        title: 26,
+        title: 24,
         dashboard: 32,
         amount: 22,
 

@@ -11,8 +11,3 @@ export const View = styled.View`
     width: 100%;
     padding-bottom: ${RFPercentage(5)}px;
 `;
-
-export const InputContainer = styled.View`
-    width: 100%;
-    margin: ${RFPercentage(10)}px;
-`;

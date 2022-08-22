@@ -5,13 +5,12 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes";
 import { ApiObject } from "../../types";
 import { api } from "../../services/api";
-import { theme } from "../../global/styles/theme";
 import Header from "../../components/Header";
 import Button from "../../components/Button";
-import Input from "../../components/Input";
-import { View, Container, InputContainer } from "./style";
+import { View, Container } from "./style";
 import { Alert, Keyboard, TouchableWithoutFeedback } from "react-native";
 import Splash from "../../components/Splash";
+import InputPV from "./InputPV";
 
 interface AuthToken {
     token: string;
@@ -136,16 +135,7 @@ export default function Home() {
                 <Container>
                     <View>
                         <Header title="Informe o numero do PV" />
-                        <InputContainer>
-                            <Input
-                                placeholder="Pedido de Venda:"
-                                placeholderTextColor={theme.colors.text}
-                                autoCorrect={false}
-                                onChangeText={setPv}
-                                autoCapitalize="none"
-                                value={pv}
-                            />
-                        </InputContainer>
+                        <InputPV value={pv} valueChange={setPv} />
                     </View>
 
                     <Button title="CONFIRMAR" onPress={handleItemPV} />
