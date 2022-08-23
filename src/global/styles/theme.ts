@@ -21,13 +21,13 @@ export const theme = {
         background: "#f0f2f5",
     },
     fonts: {
-        primary: 19,
+        primary: 18,
         secondary: 16,
 
         icon: 24,
-        title: 24,
-        dashboard: 32,
-        amount: 22,
+        title: 22,
+        dashboard: 24,
+        amount: 20,
 
         family: {
             light: "Roboto_300Light",
@@ -50,11 +50,6 @@ export const alignRow = css`
     align-items: center;
 `;
 
-export const justifyRow = css`
-    flex-direction: row;
-    align-items: center;
-`;
-
 export const centerRow = css`
     flex-direction: row;
     align-items: center;
@@ -64,6 +59,11 @@ export const centerRow = css`
 export const centerColumn = css`
     align-items: center;
     justify-content: center;
+`;
+
+export const endColumn = css`
+    align-items: center;
+    justify-content: flex-end;
 `;
 
 export const padding = css`
@@ -79,7 +79,3 @@ export const MainWrapper = styled.View`
 export const ContainerScroll = styled.ScrollView``;
 
 export const ContainerView = styled.View``;
-
-export const ContainerText = styled.Text``;
-
-export const ContainerButton = styled.TouchableOpacity``;

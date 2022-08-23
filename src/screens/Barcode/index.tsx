@@ -22,18 +22,11 @@ import SuccessScam from "./SuccessScam";
 import QtdInput from "./QtdInput";
 import ErrorScreen from "../../components/ErrorScreen";
 import Splash from "../../components/Splash";
+import { SubmitScan } from "../../types";
 
 interface CodeScanned {
     type: string;
     data: string;
-}
-
-interface SubmitScan {
-    id: string;
-    Pedido: string;
-    Item: string;
-    Produto: string;
-    Peso: number;
 }
 
 interface RouteProps {
@@ -102,6 +95,7 @@ export default function Barcode({ route }: RouteProps) {
             Alert.alert("Quantidade adicionada");
         } catch (err) {
             console.error(err);
+            Alert.alert("Não foi possível adicionar ao Protheus");
         } finally {
             console.log("send", submitObject);
 
@@ -162,7 +156,7 @@ export default function Barcode({ route }: RouteProps) {
             <ContainerView style={styles.container}>
                 <Header
                     title={`QTD Lida: ${String(qtdRead).replace(".", ",")} kg`}
-                    description={`${"\n"}(produto: ${
+                    description={`(produto: ${
                         itemPV.CODIGO
                     })${"\n"}(Pedido: ${inputPV})${"\n"}(Item: ${itemPV.ITEM})`}
                     fixed={false}

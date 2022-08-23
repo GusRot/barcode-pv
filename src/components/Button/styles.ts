@@ -1,6 +1,7 @@
 import { TouchableOpacityProps } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import styled, { css } from "styled-components/native";
+import { padding } from "../../global/styles/theme";
 
 interface TitleProps extends TouchableOpacityProps {
     primary: boolean;
@@ -8,10 +9,10 @@ interface TitleProps extends TouchableOpacityProps {
 }
 
 export const ButtonContainer = styled.TouchableOpacity<TitleProps>`
+    ${padding}
     align-items: center;
     width: 90%;
     border-radius: ${({ theme }) => RFValue(theme.common.radius)}px;
-    padding: ${({ theme }) => RFValue(theme.common.padding)}px;
     margin: ${({ theme }) => RFValue(theme.common.padding)}px;
     border: 1px solid transparent;
     background-color: ${({ primary, enabled, theme }) =>

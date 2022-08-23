@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import { alignRow } from "../../../global/styles/theme";
+import { alignRow, centerColumn } from "../../../global/styles/theme";
 
 export const QtdContainer = styled.View`
     ${alignRow};
@@ -7,7 +7,6 @@ export const QtdContainer = styled.View`
 `;
 
 export const QtdContainerDivider = styled.View`
+    ${centerColumn}
     width: 45%;
-    align-items: center;
-    justify-content: center;
 `;

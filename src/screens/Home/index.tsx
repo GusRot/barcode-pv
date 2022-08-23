@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes";
-import { ApiObject } from "../../types";
+import { ApiObject, AuthToken } from "../../types";
 import { api } from "../../services/api";
 import Header from "../../components/Header";
 import Button from "../../components/Button";
@@ -11,13 +11,6 @@ import { View, Container } from "./style";
 import { Alert, Keyboard, TouchableWithoutFeedback } from "react-native";
 import Splash from "../../components/Splash";
 import InputPV from "./InputPV";
-
-interface AuthToken {
-    token: string;
-    time: number;
-    refresh: string;
-    data: Date;
-}
 
 export default function Home() {
     const [appIsReady, setAppIsReady] = useState(true);
