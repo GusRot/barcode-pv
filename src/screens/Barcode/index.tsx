@@ -14,6 +14,7 @@ import {
     BarCodeContainer,
     BarCodeEnableContainer,
     SubmitContainer,
+    TextError,
 } from "./styles";
 import Button from "../../components/Button";
 import Header from "../../components/Header";
@@ -23,6 +24,7 @@ import QtdInput from "./QtdInput";
 import ErrorScreen from "../../components/ErrorScreen";
 import Splash from "../../components/Splash";
 import { SubmitScan } from "../../types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface CodeScanned {
     type: string;
@@ -42,38 +44,53 @@ export default function Barcode({ route }: RouteProps) {
     const [openCodeReader, setOpenCodeReader] = useState(false);
     const [userHandleCam, setUserHandleCam] = useState(false);
     const [userHandleInput, setUserHandleInput] = useState(false);
+    const [errorQtd, setErrorQtd] = useState(false);
     const [qtdRead, setQtdRead] = useState(0);
+    const [lastQtd, setLastQtd] = useState(0);
+    const [errorMessage, setErrorMessage] = useState("");
     const [inputQtd, setInputQtd] = useState("");
+    const storagePVKey = "@barcodepv:pvItem";
 
     function handleBarCode() {
         setScanned(false);
     }
 
     const handleBarCodeScanned = ({ type, data }: CodeScanned) => {
-        setScanned(true);
-        setInputQtd("");
-        setQtdRead(Number(data) + qtdRead);
-        alert(`Quantidade ${data} foi lida!`);
-        handleQtdUpdate();
-    };
-
-    async function handleQtdUpdate() {
-        if (inputQtd) {
-            const inputQtdFormatted = inputQtd.replace(",", ".");
-
-            if (!inputQtdFormatted) {
-                Alert.alert("Quantidade invalida");
-                setInputQtd("");
-                return;
-            }
-
-            const newQtdRead = parseFloat(inputQtdFormatted) + Number(qtdRead);
-            setQtdRead(newQtdRead);
-            setInputQtd("");
-            await barCodeSubmit(Number(inputQtdFormatted));
+        if (!data || Number.isNaN(Number(data)) || Number(data) > 100) {
+            setErrorMessage(`Quantidade ${data} invalida`);
+            setErrorQtd(true);
+            setLastQtd(0);
             return;
         }
-        await barCodeSubmit(qtdRead);
+
+        setScanned(true);
+        setErrorQtd(false);
+        setErrorMessage("");
+        setInputQtd("");
+        setLastQtd(Number(data));
+        setQtdRead(Number(data) + qtdRead);
+        barCodeSubmit(Number(data));
+    };
+
+    function handleQtdUpdate() {
+        if (!inputQtd) {
+            Alert.alert("Quantidade invalida");
+            setLastQtd(0);
+            setInputQtd("");
+            return;
+        }
+        const inputQtdFormatted = inputQtd.replace(",", ".");
+
+        if (!inputQtdFormatted) {
+            Alert.alert("Quantidade invalida");
+            setLastQtd(0);
+            setInputQtd("");
+            return;
+        }
+
+        setLastQtd(parseFloat(inputQtdFormatted));
+        setInputQtd("");
+        barCodeSubmit(parseFloat(inputQtdFormatted));
     }
 
     function barCodeSubmit(qtdRead: number) {
@@ -92,7 +109,10 @@ export default function Barcode({ route }: RouteProps) {
         setAppIsReady(false);
         try {
             await api.post(`/retail/v1/AWSITPV`, submitObject);
-            Alert.alert("Quantidade adicionada");
+            const newQtdRead = submitObject.Peso + Number(qtdRead);
+            setQtdRead(newQtdRead);
+            Alert.alert(`Quantidade ${submitObject.Peso} adicionada`);
+            await storeData(submitObject);
         } catch (err) {
             console.error(err);
             Alert.alert("Não foi possível adicionar ao Protheus");
@@ -100,6 +120,15 @@ export default function Barcode({ route }: RouteProps) {
             console.log("send", submitObject);
 
             setAppIsReady(true);
+        }
+    }
+
+    async function storeData(submitObject: SubmitScan) {
+        const totalQtd = { ...submitObject, total: qtdRead };
+        try {
+            AsyncStorage.setItem(storagePVKey, JSON.stringify(totalQtd));
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -112,7 +141,9 @@ export default function Barcode({ route }: RouteProps) {
     }
 
     function handleFinishPV() {
-        navigation.navigate("Home", { payload: undefined });
+        navigation.navigate("Home", {
+            payload: { loadProducts: true, pv: inputPV },
+        });
     }
 
     const getBarCodeScannerPermissions = async () => {
@@ -164,7 +195,7 @@ export default function Barcode({ route }: RouteProps) {
                 {!userHandleCam && !scanned && (
                     <BarCodeEnableContainer>
                         <Button
-                            title={"Habilitar leitura"}
+                            title={"Habilitar Leitura"}
                             primary={false}
                             onPress={handleBarCodeEnable}
                         />
@@ -177,8 +208,9 @@ export default function Barcode({ route }: RouteProps) {
                                 onBarCodeScanned={
                                     scanned ? undefined : handleBarCodeScanned
                                 }
-                                style={StyleSheet.absoluteFillObject}
+                                style={styles.container}
                             />
+                            {errorQtd && <TextError>{errorMessage}</TextError>}
                         </BarCodeContainer>
                     </>
                 )}
@@ -199,7 +231,7 @@ export default function Barcode({ route }: RouteProps) {
                 )}
                 <SubmitContainer>
                     <Button
-                        title={"Finalizar"}
+                        title={"Voltar"}
                         onPress={handleFinishPV}
                         enabled={!!qtdRead}
                     />

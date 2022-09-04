@@ -9,6 +9,9 @@ export interface ApiObject {
     CODIGO: string;
     ITEM: string;
     QTDPV: number;
+    QTDLIDO: number;
+    SLDLIB: number;
+    SLDSEP: number;
     DESCRICAO: string;
 }
 
@@ -22,4 +25,8 @@ export interface SubmitScan {
 
 export interface ApiObjectScanned extends ApiObject {
     barcode: string;
+}
+
+export interface AsyncData extends SubmitScan {
+    total: Number;
 }

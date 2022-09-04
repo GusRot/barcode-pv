@@ -4,17 +4,33 @@ import { Border, Container, Text, TextDescription, TextTitle } from "./style";
 
 interface CardProps extends TouchableOpacityProps {
     data: ApiObject;
+    lastPvProps: Boolean;
 }
 
-export default function Card({ data, ...rest }: CardProps) {
+export default function Card({ lastPvProps, data, ...rest }: CardProps) {
     return (
-        <Container {...rest}>
+        <Container {...rest} backgroundColor={data.QTDLIDO} last={lastPvProps}>
             <Border>
-                <TextTitle> Item: {data.CODIGO} </TextTitle>
+                <TextDescription> {data.DESCRICAO} </TextDescription>
             </Border>
-            <Text> Produto: {data.ITEM} </Text>
-            <Text> Quantidade: {data.QTDPV} </Text>
-            <TextDescription> Descrição: {data.DESCRICAO} </TextDescription>
+            <TextTitle>Item: {data.ITEM} </TextTitle>
+            <Text>Produto: {data.CODIGO} </Text>
+            <Text>
+                TOTAL Pedido: {String(data.QTDPV).replace(".", ",")}
+                {" kg"}
+            </Text>
+            <Text>
+                A Liberar: {String(data.SLDLIB).replace(".", ",")}
+                {" kg"}
+            </Text>
+            <Text>
+                Lido: {String(data.QTDLIDO).replace(".", ",")}
+                {" kg"}
+            </Text>
+            <Text>
+                Saldo: {String(data.SLDSEP).replace(".", ",")}
+                {" kg"}
+            </Text>
         </Container>
     );
 }
