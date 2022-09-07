@@ -10,7 +10,7 @@ export const Container = styled.View<ContainerProps>`
     ${endColumn}
     width: 100%;
     padding-bottom: ${RFPercentage(5)}px;
-    height: ${({ fixed }) => (fixed ? `${RFPercentage(20)}px` : "auto")};
+    height: ${({ fixed }) => (fixed ? `${RFPercentage(17)}px` : "auto")};
     background-color: ${({ theme }) => theme.colors.secondary};
 `;
 

@@ -10,7 +10,7 @@ export default function Routes() {
     );
 }
 
-interface HomeLoadProducts {
+interface PVItemLoadProducts {
     loadProducts: Boolean;
     pv: string;
 }
@@ -20,8 +20,13 @@ export interface ItemPreviewProps {
     inputPV: string;
 }
 
-export interface HomeProps {
-    payload: undefined | HomeLoadProducts;
+export interface ItemsCollectedProps {
+    itemsPV: ApiObject[];
+    inputPV: string;
+}
+
+export interface PVItemProps {
+    payload: undefined | PVItemLoadProducts;
 }
 
 export interface BarCodeProps {
@@ -30,7 +35,7 @@ export interface BarCodeProps {
 }
 
 export type RootStackParamList = {
-    Home: HomeProps;
+    PVItem: PVItemProps;
     ItemPreview: ItemPreviewProps;
     BarCode: BarCodeProps;
 };

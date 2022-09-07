@@ -15,6 +15,7 @@ export default function Header({
         <Container fixed={fixed}>
             {title ? <Title>{title}</Title> : <></>}
             {description ? <Description>{description}</Description> : <></>}
+            <Description>{"Cliente Nome"}</Description>
         </Container>
     );
 }

@@ -7,6 +7,7 @@ export const theme = {
         primary_light: "rgba(19,39,74,0.35)",
         secondary: "#FBBB57",
         secondary_light: "rgba(251,187,87,0.5)",
+        tertiary: "#FFDC40",
 
         success: "#07E78E",
         success_light: "rgba(7,231,142, 0.4)",

@@ -81,7 +81,7 @@ export default function Barcode({ route }: RouteProps) {
         }
         const inputQtdFormatted = inputQtd.replace(",", ".");
 
-        if (!inputQtdFormatted) {
+        if (!inputQtdFormatted || inputQtdFormatted === ".") {
             Alert.alert("Quantidade invalida");
             setLastQtd(0);
             setInputQtd("");
@@ -100,6 +100,7 @@ export default function Barcode({ route }: RouteProps) {
             Item: itemPV.ITEM,
             Produto: itemPV.CODIGO,
             Peso: qtdRead,
+            Modo: 1,
         };
 
         sendProducts(submitObject);
@@ -141,7 +142,7 @@ export default function Barcode({ route }: RouteProps) {
     }
 
     function handleFinishPV() {
-        navigation.navigate("Home", {
+        navigation.navigate("PVItem", {
             payload: { loadProducts: true, pv: inputPV },
         });
     }
@@ -187,7 +188,7 @@ export default function Barcode({ route }: RouteProps) {
             <ContainerView style={styles.container}>
                 <Header
                     title={`QTD Lida: ${String(qtdRead).replace(".", ",")} kg`}
-                    description={`(produto: ${
+                    description={`(Descrição: ${"descriçao simples"})${"\n"}(Produto: ${
                         itemPV.CODIGO
                     })${"\n"}(Pedido: ${inputPV})${"\n"}(Item: ${itemPV.ITEM})`}
                     fixed={false}

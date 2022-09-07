@@ -5,9 +5,10 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList, ItemPreviewProps } from "../../routes";
 import { ApiObject, AsyncData } from "../../types";
-import { ContainerScroll } from "../../global/styles/theme";
+import { ContainerScroll, ContainerView } from "../../global/styles/theme";
 import Header from "../../components/Header";
 import Card from "./Card";
+import BackButton from "../../components/BackButton";
 interface RouteProps {
     route: RouteProp<{ params: ItemPreviewProps }, "params">;
 }
@@ -16,7 +17,6 @@ export default function ItemPreview({ route }: RouteProps) {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const { inputPV, itemsPV } = route.params;
     const [lastPv, setLastPv] = useState("");
-    const [lastPvQtd, setLastPvQtd] = useState(0);
     const storagePVKey = "@barcodepv:pvItem";
 
     useEffect(() => {
@@ -36,7 +36,6 @@ export default function ItemPreview({ route }: RouteProps) {
                 ? (JSON.parse(response) as AsyncData)
                 : ({} as AsyncData);
             setLastPv(lastPVBiped.Item + lastPVBiped.Produto);
-            setLastPvQtd;
         } catch (error) {
             console.log(error);
         }
@@ -46,12 +45,21 @@ export default function ItemPreview({ route }: RouteProps) {
         navigation.navigate("BarCode", { itemPV: item, inputPV });
     }
 
+    function handlePVItemPage() {
+        navigation.navigate("PVItem", {
+            payload: undefined,
+        });
+    }
+
     return (
         <>
-            <Header
-                title={`PV: (${inputPV})`}
-                description="Selecione um Item"
-            />
+            <ContainerView>
+                <Header
+                    title={`PV: (${inputPV})`}
+                    description="Cliente/Loja: coso/dsos"
+                />
+                <BackButton onPress={handlePVItemPage} />
+            </ContainerView>
             <ContainerScroll>
                 {itemsPV.map((item) => (
                     <Card
