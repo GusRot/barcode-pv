@@ -15,23 +15,25 @@ interface PVItemLoadProducts {
     pv: string;
 }
 
-export interface ItemPreviewProps {
-    itemsPV: ApiObject[];
+interface ApiItem {
     inputPV: string;
+    client: string;
 }
 
-export interface ItemsCollectedProps {
+interface ApiItems extends ApiItem {
     itemsPV: ApiObject[];
-    inputPV: string;
 }
+
+export interface ItemPreviewProps extends ApiItems {}
+
+export interface ItemsCollectedProps extends ApiItems {}
 
 export interface PVItemProps {
     payload: undefined | PVItemLoadProducts;
 }
 
-export interface BarCodeProps {
+export interface BarCodeProps extends ApiItem {
     itemPV: ApiObject;
-    inputPV: string;
 }
 
 export type RootStackParamList = {

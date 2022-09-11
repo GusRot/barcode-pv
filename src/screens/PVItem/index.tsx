@@ -28,6 +28,7 @@ export default function PVItem({ route }: RouteProps) {
     const [appIsReady, setAppIsReady] = useState(true);
     const [pv, setPv] = useState("");
     const [responsePv, setResponsePv] = useState("");
+    const [client, setClient] = useState("");
     const [lastPVBiped, setLastPVBiped] = useState({} as ItemPreviewProps);
     const [itemOptions, setItemOptions] = useState<ApiObject[]>([]);
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -76,6 +77,7 @@ export default function PVItem({ route }: RouteProps) {
             navigation.navigate("ItemPreview", {
                 itemsPV: itemOptions,
                 inputPV: responsePv,
+                client,
             });
         }
         getStoreData();
@@ -98,6 +100,10 @@ export default function PVItem({ route }: RouteProps) {
                 .then((response) => {
                     const itens = response.data.Ret[0].itens;
                     const pedido = response.data.Ret[0].pedido;
+                    setClient(
+                        response.data.Ret[0].nome.trim() +
+                            response.data.Ret[0].lojcli.trim()
+                    );
                     setItemOptions(itens);
                     setResponsePv(pedido);
                     storeData(itens, pedido);
@@ -170,6 +176,7 @@ export default function PVItem({ route }: RouteProps) {
         const object = {
             itemsPV: itemObject,
             inputPV: pv,
+            client,
         };
         try {
             const response = await AsyncStorage.getItem(storagePVKey);
@@ -213,8 +220,11 @@ export default function PVItem({ route }: RouteProps) {
                             onPress={handleLastItemPV}
                         />
                     )}
-
-                    <Button title="CONFIRMAR" onPress={handleItemPV} />
+                    <Button
+                        title="CONFIRMAR"
+                        onPress={handleItemPV}
+                        enabled={!!pv}
+                    />
                 </Container>
             </TouchableWithoutFeedback>
         );

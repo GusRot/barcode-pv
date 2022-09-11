@@ -1,7 +1,11 @@
 import styled from "styled-components/native";
 import { RFValue } from "react-native-responsive-fontsize";
+import { alignRow } from "../../global/styles/theme";
 
-export const SubmitContainer = styled.View``;
+export const SubmitContainer = styled.View`
+    ${alignRow};
+    justify-content: center;
+`;
 
 export const BarCodeContainer = styled.View`
     flex: 1;

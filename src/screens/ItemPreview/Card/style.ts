@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components/native";
 import { RFValue } from "react-native-responsive-fontsize";
-
+import Ionicons from "@expo/vector-icons/Ionicons";
 interface ContainerProps {
     backgroundColor: Number;
     last: Boolean;
@@ -19,6 +19,7 @@ export const Container = styled.TouchableOpacity<ContainerProps>`
         backgroundColor ? theme.colors.tertiary : theme.colors.primary};
     border-radius: ${({ theme }) => RFValue(theme.common.radius)}px;
     margin: ${({ theme }) => RFValue(theme.common.padding)}px;
+    position: relative;
 
     ${({ last }) =>
         last &&
@@ -29,7 +30,7 @@ export const Container = styled.TouchableOpacity<ContainerProps>`
     ${({ finished }) =>
         !finished &&
         css`
-            background-color: ${({ theme }) => theme.colors.text};
+            background-color: ${({ theme }) => theme.colors.attention};
         `};
 `;
 
@@ -83,5 +84,23 @@ export const TextDescription = styled.Text<TextProps>`
         `};
 `;
 
-export const ButtonView = styled.View`
-`
+export const ButtonView = styled.View``;
+
+export const ListInfoIcon = styled.TouchableOpacity`
+    width: ${RFValue(60)}px;
+    height: ${RFValue(50)}px;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    bottom: 0;
+    right: 0;
+    border-radius: ${({ theme }) => RFValue(theme.common.radius)}px;
+    margin-right: ${({ theme }) => RFValue(theme.common.padding)}px;
+    margin-bottom: ${({ theme }) => RFValue(theme.common.padding)}px;
+    background-color: ${({ theme }) => theme.colors.secondary_light};
+`;
+
+export const Icon = styled(Ionicons)`
+    color: ${({ theme }) => theme.colors.text_dark};
+    font-size: ${({ theme }) => RFValue(theme.fonts.icon_secondary)}px;
+`;

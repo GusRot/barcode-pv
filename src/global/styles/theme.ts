@@ -12,7 +12,7 @@ export const theme = {
         success: "#07E78E",
         success_light: "rgba(7,231,142, 0.4)",
 
-        attention: "#c91d43",
+        attention: "#D91d43",
         attention_light: "rgba(201, 29, 67, 0.5)",
 
         shape: "#fff",
@@ -20,12 +20,14 @@ export const theme = {
         text: "#a5a5a5",
         text_dark: "#000",
         background: "#f0f2f5",
+        green: "green",
     },
     fonts: {
         primary: 18,
         secondary: 16,
 
-        icon: 24,
+        icon: 40,
+        icon_secondary: 30,
         title: 22,
         dashboard: 24,
         amount: 20,

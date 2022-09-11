@@ -15,7 +15,7 @@ import {
     BarCodeEnableContainer,
     SubmitContainer,
     TextError,
-} from "./styles";
+} from "./style";
 import Button from "../../components/Button";
 import Header from "../../components/Header";
 import { api } from "../../services/api";
@@ -37,7 +37,7 @@ interface RouteProps {
 
 export default function Barcode({ route }: RouteProps) {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const { itemPV, inputPV } = route.params;
+    const { itemPV, inputPV, client } = route.params;
     const [hasPermission, setHasPermission] = useState<boolean>();
     const [appIsReady, setAppIsReady] = useState(true);
     const [scanned, setScanned] = useState(false);
@@ -56,7 +56,8 @@ export default function Barcode({ route }: RouteProps) {
     }
 
     const handleBarCodeScanned = ({ type, data }: CodeScanned) => {
-        if (!data || Number.isNaN(Number(data)) || Number(data) > 100) {
+        const newData = String(data).replace(",", ".");
+        if (!data || Number.isNaN(Number(newData)) || Number(newData) > 100) {
             setErrorMessage(`Quantidade ${data} invalida`);
             setErrorQtd(true);
             setLastQtd(0);
@@ -67,14 +68,14 @@ export default function Barcode({ route }: RouteProps) {
         setErrorQtd(false);
         setErrorMessage("");
         setInputQtd("");
-        setLastQtd(Number(data));
-        setQtdRead(Number(data) + qtdRead);
-        barCodeSubmit(Number(data));
+        setLastQtd(Number(newData));
+        setQtdRead(Number(newData) + qtdRead);
+        barCodeSubmit(Number(newData));
     };
 
     function handleQtdUpdate() {
         if (!inputQtd) {
-            Alert.alert("Quantidade invalida");
+            Alert.alert("Quantidade invalida, preencha o campo");
             setLastQtd(0);
             setInputQtd("");
             return;
@@ -82,7 +83,7 @@ export default function Barcode({ route }: RouteProps) {
         const inputQtdFormatted = inputQtd.replace(",", ".");
 
         if (!inputQtdFormatted || inputQtdFormatted === ".") {
-            Alert.alert("Quantidade invalida");
+            Alert.alert("Quantidade invalida, Deve ser um número");
             setLastQtd(0);
             setInputQtd("");
             return;
@@ -90,6 +91,8 @@ export default function Barcode({ route }: RouteProps) {
 
         setLastQtd(parseFloat(inputQtdFormatted));
         setInputQtd("");
+        setErrorQtd(false);
+        setErrorMessage("");
         barCodeSubmit(parseFloat(inputQtdFormatted));
     }
 
@@ -100,7 +103,7 @@ export default function Barcode({ route }: RouteProps) {
             Item: itemPV.ITEM,
             Produto: itemPV.CODIGO,
             Peso: qtdRead,
-            Modo: 1,
+            Modo: scanned,
         };
 
         sendProducts(submitObject);
@@ -147,6 +150,8 @@ export default function Barcode({ route }: RouteProps) {
         });
     }
 
+    function handleLastTransaction() {}
+
     const getBarCodeScannerPermissions = async () => {
         const { status } = await BarCodeScanner.requestPermissionsAsync();
         setHasPermission(status === "granted");
@@ -188,9 +193,9 @@ export default function Barcode({ route }: RouteProps) {
             <ContainerView style={styles.container}>
                 <Header
                     title={`QTD Lida: ${String(qtdRead).replace(".", ",")} kg`}
-                    description={`(Descrição: ${"descriçao simples"})${"\n"}(Produto: ${
-                        itemPV.CODIGO
-                    })${"\n"}(Pedido: ${inputPV})${"\n"}(Item: ${itemPV.ITEM})`}
+                    description={`${client}${"\n"}${"descriçao simples"}${"\n"}Pedido: ${inputPV}${"\n"}Item: ${
+                        itemPV.ITEM
+                    }`}
                     fixed={false}
                 />
                 {!userHandleCam && !scanned && (
@@ -235,6 +240,17 @@ export default function Barcode({ route }: RouteProps) {
                         title={"Voltar"}
                         onPress={handleFinishPV}
                         enabled={!!qtdRead}
+                        two={true}
+                    />
+
+                    <Button
+                        title={String.fromCharCode(10226)}
+                        onPress={handleLastTransaction}
+                        enabled={!!lastQtd}
+                        disabled={!lastQtd}
+                        two={true}
+                        font={"small"}
+                        icon={true}
                     />
                 </SubmitContainer>
             </ContainerView>

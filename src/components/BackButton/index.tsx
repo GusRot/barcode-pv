@@ -7,7 +7,7 @@ interface BackButtonProps extends TouchableOpacityProps {}
 export default function BackButton({ ...all }: BackButtonProps) {
     return (
         <ButtonContainer {...all}>
-            <ButtonContainerFont>&#x2190;</ButtonContainerFont>
+            <ButtonContainerFont name="arrow-back" />
         </ButtonContainer>
     );
 }

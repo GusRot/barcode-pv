@@ -3,20 +3,27 @@ import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
+import { Modal } from "react-native";
 import { RootStackParamList, ItemPreviewProps } from "../../routes";
 import { ApiObject, AsyncData } from "../../types";
 import { ContainerScroll, ContainerView } from "../../global/styles/theme";
 import Header from "../../components/Header";
 import Card from "./Card";
 import BackButton from "../../components/BackButton";
+import { Icon, ListOptions } from "./style";
+import OptionsModal from "../../components/OptionsModal";
 interface RouteProps {
     route: RouteProp<{ params: ItemPreviewProps }, "params">;
 }
 
+type ModeOptions = "readonly" | "standard" | "romaneio";
+
 export default function ItemPreview({ route }: RouteProps) {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const { inputPV, itemsPV } = route.params;
+    const { inputPV, itemsPV, client } = route.params;
     const [lastPv, setLastPv] = useState("");
+    const [modeActive, setModeActive] = useState<ModeOptions>("standard");
+    const [modal, setModal] = useState(false);
     const storagePVKey = "@barcodepv:pvItem";
 
     useEffect(() => {
@@ -28,6 +35,11 @@ export default function ItemPreview({ route }: RouteProps) {
             getLastPV();
         }, [])
     );
+
+    function handleModalOpen(option: ModeOptions) {
+        setModeActive(option);
+        setModal(!modal);
+    }
 
     async function getLastPV() {
         try {
@@ -42,7 +54,7 @@ export default function ItemPreview({ route }: RouteProps) {
     }
 
     function handleBarCode(item: ApiObject) {
-        navigation.navigate("BarCode", { itemPV: item, inputPV });
+        navigation.navigate("BarCode", { itemPV: item, inputPV, client });
     }
 
     function handlePVItemPage() {
@@ -56,8 +68,11 @@ export default function ItemPreview({ route }: RouteProps) {
             <ContainerView>
                 <Header
                     title={`PV: (${inputPV})`}
-                    description="Cliente/Loja: coso/dsos"
+                    description={`Cliente/Loja: ${client}`}
                 />
+                <ListOptions onPress={handleModalOpen}>
+                    <Icon name="menu" onPress={handleModalOpen} />
+                </ListOptions>
                 <BackButton onPress={handlePVItemPage} />
             </ContainerView>
             <ContainerScroll>
@@ -72,6 +87,10 @@ export default function ItemPreview({ route }: RouteProps) {
                     />
                 ))}
             </ContainerScroll>
+
+            <Modal visible={modal}>
+                <OptionsModal close={handleModalOpen} modeActive={modeActive} />
+            </Modal>
         </>
     );
 }

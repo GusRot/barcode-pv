@@ -1,6 +1,14 @@
 import { TouchableOpacityProps } from "react-native";
 import { ApiObject } from "../../../types";
-import { Border, Container, Text, TextDescription, TextTitle } from "./style";
+import {
+    Border,
+    Container,
+    Icon,
+    ListInfoIcon,
+    Text,
+    TextDescription,
+    TextTitle,
+} from "./style";
 
 interface CardProps extends TouchableOpacityProps {
     data: ApiObject;
@@ -8,13 +16,13 @@ interface CardProps extends TouchableOpacityProps {
 }
 
 export default function Card({ lastPvProps, data, ...rest }: CardProps) {
-    const colorProps = (lastPvProps || data.QTDLIDO) && data.SLDSEP;
+    const colorProps = (lastPvProps || data.QTDLIDO) && data.SLDSEP > 0;
     return (
         <Container
             {...rest}
             backgroundColor={data.QTDLIDO}
             last={lastPvProps}
-            finished={data.SLDSEP}
+            finished={data.SLDSEP > 0}
         >
             <Border>
                 <TextDescription color={colorProps}>
@@ -39,6 +47,9 @@ export default function Card({ lastPvProps, data, ...rest }: CardProps) {
                 Saldo: {String(data.SLDSEP).replace(".", ",")}
                 {" kg"}
             </Text>
+            <ListInfoIcon>
+                <Icon name="podium" />
+            </ListInfoIcon>
         </Container>
     );
 }

@@ -21,6 +21,7 @@ export interface SubmitScan {
     Item: string;
     Produto: string;
     Peso: number;
+    Modo: boolean;
 }
 
 export interface ApiObjectScanned extends ApiObject {
