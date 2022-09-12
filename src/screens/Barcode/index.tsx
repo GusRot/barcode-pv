@@ -96,13 +96,13 @@ export default function Barcode({ route }: RouteProps) {
         barCodeSubmit(parseFloat(inputQtdFormatted));
     }
 
-    function barCodeSubmit(qtdRead: number) {
+    function barCodeSubmit(newQtdRead: number) {
         const submitObject = {
             id: "COLETA",
             Pedido: inputPV,
             Item: itemPV.ITEM,
             Produto: itemPV.CODIGO,
-            Peso: qtdRead,
+            Peso: newQtdRead,
             Modo: scanned,
         };
 
@@ -192,9 +192,9 @@ export default function Barcode({ route }: RouteProps) {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <ContainerView style={styles.container}>
                 <Header
-                    title={`QTD Lida: ${String(qtdRead).replace(".", ",")} kg`}
-                    description={`${client}${"\n"}${"descriçao simples"}${"\n"}Pedido: ${inputPV}${"\n"}Item: ${
-                        itemPV.ITEM
+                    title={`QTD Lida: ${String(lastQtd).replace(".", ",")} kg`}
+                    description={`${client}${"\n"}${"descriçao simples"}${"\n"}Item/Pedido: ${
+                        itemPV.ITEM + "/" + inputPV
                     }`}
                     fixed={false}
                 />
@@ -230,7 +230,7 @@ export default function Barcode({ route }: RouteProps) {
                     />
                 ) : (
                     <Button
-                        title={"Habilitar Input QTD"}
+                        title={"Habilitar Input"}
                         primary={false}
                         onPress={handleInputEnable}
                     />
@@ -249,7 +249,6 @@ export default function Barcode({ route }: RouteProps) {
                         enabled={!!lastQtd}
                         disabled={!lastQtd}
                         two={true}
-                        font={"small"}
                         icon={true}
                     />
                 </SubmitContainer>

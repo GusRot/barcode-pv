@@ -12,10 +12,16 @@ import {
 
 interface CardProps extends TouchableOpacityProps {
     data: ApiObject;
-    lastPvProps: Boolean;
+    lastPvProps?: Boolean;
+    readMode?: Boolean;
 }
 
-export default function Card({ lastPvProps, data, ...rest }: CardProps) {
+export default function Card({
+    data,
+    lastPvProps = false,
+    readMode = false,
+    ...rest
+}: CardProps) {
     const colorProps = (lastPvProps || data.QTDLIDO) && data.SLDSEP > 0;
     return (
         <Container
@@ -23,6 +29,7 @@ export default function Card({ lastPvProps, data, ...rest }: CardProps) {
             backgroundColor={data.QTDLIDO}
             last={lastPvProps}
             finished={data.SLDSEP > 0}
+            mode={readMode}
         >
             <Border>
                 <TextDescription color={colorProps}>
@@ -47,7 +54,7 @@ export default function Card({ lastPvProps, data, ...rest }: CardProps) {
                 Saldo: {String(data.SLDSEP).replace(".", ",")}
                 {" kg"}
             </Text>
-            <ListInfoIcon>
+            <ListInfoIcon display={readMode}>
                 <Icon name="podium" />
             </ListInfoIcon>
         </Container>

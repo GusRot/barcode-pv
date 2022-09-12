@@ -9,7 +9,7 @@ import {
 type modeOptions = "readonly" | "standard" | "romaneio";
 
 interface ModalProps {
-    close: (option: modeOptions) => void;
+    close: (option: modeOptions | null) => void;
     modeActive: modeOptions;
 }
 
@@ -32,7 +32,7 @@ export default function OptionsModal({ close, modeActive }: ModalProps) {
                 <Icon name="checkbox" active={romaneio} />
                 <ModalText active={romaneio}>Romaneio</ModalText>
             </ModalOptions>
-            <IconClose name="close" onPress={close} />
+            <IconClose name="close" onPress={() => close(null)} />
         </ModalContainer>
     );
 }

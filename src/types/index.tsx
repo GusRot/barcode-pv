@@ -15,6 +15,20 @@ export interface ApiObject {
     DESCRICAO: string;
 }
 
+interface ReadData {
+    DATA: string;
+    HORA: string;
+    PESO: number;
+    ROMANEIO: string;
+}
+
+export interface ApiReadObject {
+    CODIGO: string;
+    DESCRICAO: string;
+    ITEM: string;
+    coleta: ReadData[];
+}
+
 export interface SubmitScan {
     id: string;
     Pedido: string;

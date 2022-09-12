@@ -1,6 +1,5 @@
 import styled from "styled-components/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { RFValue } from "react-native-responsive-fontsize";
 
 export const ButtonContainer = styled.TouchableOpacity`
     position: absolute;
@@ -12,7 +11,6 @@ export const ButtonContainer = styled.TouchableOpacity`
     background-color: ${({ theme }) => theme.colors.secondary_light};
     z-index: 20;
 `;
-
 
 export const ButtonContainerFont = styled(Ionicons)`
     font-size: ${({ theme }) => theme.fonts.icon_secondary}px;

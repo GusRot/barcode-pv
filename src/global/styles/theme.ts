@@ -25,6 +25,7 @@ export const theme = {
     fonts: {
         primary: 18,
         secondary: 16,
+        small: 14,
 
         icon: 40,
         icon_secondary: 30,

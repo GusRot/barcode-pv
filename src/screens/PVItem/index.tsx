@@ -35,7 +35,7 @@ export default function PVItem({ route }: RouteProps) {
     const storageAuthKey = "@barcodepv:auth";
     const { REACT_APP_PASSWORD } = process.env;
     const { REACT_APP_USERNAME } = process.env;
-    const storagePVItensKey = "@barcodepv:pvItens";
+    const storagePvItemsKey = "@barcodepv:pvItems";
     const storagePVKey = "@barcodepv:pvItem";
 
     async function handleItemPV() {
@@ -102,6 +102,7 @@ export default function PVItem({ route }: RouteProps) {
                     const pedido = response.data.Ret[0].pedido;
                     setClient(
                         response.data.Ret[0].nome.trim() +
+                            "-" +
                             response.data.Ret[0].lojcli.trim()
                     );
                     setItemOptions(itens);
@@ -183,7 +184,7 @@ export default function PVItem({ route }: RouteProps) {
             const lastBiped = response
                 ? (JSON.parse(response) as AsyncData)
                 : ({} as AsyncData);
-            AsyncStorage.setItem(storagePVItensKey, JSON.stringify(object));
+            AsyncStorage.setItem(storagePvItemsKey, JSON.stringify(object));
             AsyncStorage.setItem(
                 storagePVKey,
                 JSON.stringify({ ...lastBiped, total: 0 })
@@ -195,7 +196,7 @@ export default function PVItem({ route }: RouteProps) {
 
     async function getStoreData() {
         try {
-            const response = await AsyncStorage.getItem(storagePVItensKey);
+            const response = await AsyncStorage.getItem(storagePvItemsKey);
             const lastBiped = response
                 ? (JSON.parse(response) as ItemPreviewProps)
                 : ({} as ItemPreviewProps);

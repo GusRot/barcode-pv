@@ -1,14 +1,20 @@
 import styled, { css } from "styled-components/native";
 import { RFValue } from "react-native-responsive-fontsize";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { TouchableOpacityProps } from "react-native";
 interface ContainerProps {
     backgroundColor: Number;
     last: Boolean;
     finished: Number;
+    mode: Boolean;
 }
 
 interface TextProps {
     color: Boolean;
+}
+
+interface IconProps extends TouchableOpacityProps {
+    display: Boolean;
 }
 
 export const Container = styled.TouchableOpacity<ContainerProps>`
@@ -31,6 +37,12 @@ export const Container = styled.TouchableOpacity<ContainerProps>`
         !finished &&
         css`
             background-color: ${({ theme }) => theme.colors.attention};
+        `};
+
+    ${({ mode }) =>
+        mode &&
+        css`
+            background-color: ${({ theme }) => theme.colors.primary};
         `};
 `;
 
@@ -86,7 +98,7 @@ export const TextDescription = styled.Text<TextProps>`
 
 export const ButtonView = styled.View``;
 
-export const ListInfoIcon = styled.TouchableOpacity`
+export const ListInfoIcon = styled.TouchableOpacity<IconProps>`
     width: ${RFValue(60)}px;
     height: ${RFValue(50)}px;
     position: absolute;
@@ -97,10 +109,16 @@ export const ListInfoIcon = styled.TouchableOpacity`
     border-radius: ${({ theme }) => RFValue(theme.common.radius)}px;
     margin-right: ${({ theme }) => RFValue(theme.common.padding)}px;
     margin-bottom: ${({ theme }) => RFValue(theme.common.padding)}px;
-    background-color: ${({ theme }) => theme.colors.secondary_light};
+    background-color: ${({ theme }) => theme.colors.success_light};
+
+    ${({ display }) =>
+        !display &&
+        css`
+            display: none;
+        `};
 `;
 
 export const Icon = styled(Ionicons)`
-    color: ${({ theme }) => theme.colors.text_dark};
+    color: ${({ theme }) => theme.colors.background};
     font-size: ${({ theme }) => RFValue(theme.fonts.icon_secondary)}px;
 `;

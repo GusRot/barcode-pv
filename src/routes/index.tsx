@@ -1,5 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { ApiObject } from "../types";
+import { ApiObject, ApiReadObject } from "../types";
 import StackRoutes from "./stack.routes";
 
 export default function Routes() {
@@ -24,6 +24,11 @@ interface ApiItems extends ApiItem {
     itemsPV: ApiObject[];
 }
 
+export interface ApiReadItem {
+    inputPV: string;
+    itemsPV: ApiReadObject[];
+}
+
 export interface ItemPreviewProps extends ApiItems {}
 
 export interface ItemsCollectedProps extends ApiItems {}
@@ -39,5 +44,6 @@ export interface BarCodeProps extends ApiItem {
 export type RootStackParamList = {
     PVItem: PVItemProps;
     ItemPreview: ItemPreviewProps;
+    ItemsCollected: ApiReadItem;
     BarCode: BarCodeProps;
 };

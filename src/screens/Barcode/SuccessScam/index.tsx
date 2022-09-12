@@ -13,7 +13,7 @@ export default function SuccessScam({ handleBarCode }: SuccessScamProps) {
             <Button title={"Adicione mais produtos"} onPress={handleBarCode} />
             <TipContainer>
                 <TextContainer
-                    text={`Você pode ler outros códigos de barras para somar suas quantidades. ${"\n"} PS: não esqueça de enviar os valores ao finalizar.`}
+                    text={`Você pode ler outros códigos de barras para somar suas quantidades automaticamente no Protheus.`}
                 />
             </TipContainer>
         </ButtonContainer>
